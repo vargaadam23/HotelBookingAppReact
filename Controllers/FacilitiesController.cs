@@ -30,9 +30,14 @@ namespace HotelBookingAppReact.Controllers
 
         [HttpPost]
         [Authorize]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create([FromBody] FacilityViewModel facilityViewModel)
         {
-            Debug.Print(facilityViewModel.Name);
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
             try
             {
                 var isFacilityCreated = facilityService.CreateFacility(facilityViewModel);

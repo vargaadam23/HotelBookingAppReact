@@ -19,13 +19,15 @@ namespace HotelBookingAppReact.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IEnumerable<Reservation> Get()
+
         {
             return reservationService.HasRecords() ? reservationService.GetReservationsForUser() : new List<Reservation>();
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         public IEnumerable<Reservation> GetAll()
         {
             return reservationService.HasRecords() ? reservationService.GetAllReservations() : new List<Reservation>();
