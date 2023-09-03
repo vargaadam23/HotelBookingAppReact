@@ -23,14 +23,12 @@ namespace HotelBookingAppReact.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Facility> List()
+        public IActionResult List()
         {
-            return facilityService.HasRecords() ? facilityService.GetFacilities() : new List<Facility>();
+            return Ok(facilityService.HasRecords() ?facilityService.GetFacilities() : new List<Facility>());
         }
 
         [HttpPost]
-        [Authorize]
-        [Authorize(Roles = "Administrator")]
         public ActionResult Create([FromBody] FacilityViewModel facilityViewModel)
         {
             if(!ModelState.IsValid)
@@ -41,7 +39,9 @@ namespace HotelBookingAppReact.Controllers
             try
             {
                 var isFacilityCreated = facilityService.CreateFacility(facilityViewModel);
-                return isFacilityCreated ? Ok() : BadRequest();
+                return isFacilityCreated ?
+                    Ok(new SuccessResponse("Facility successfully created!")) :
+                    BadRequest(new BookingError("Could not create facility!"));
             }
             catch (Exception ex)
             {
@@ -50,18 +50,19 @@ namespace HotelBookingAppReact.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Delete([FromBody] Guid guid)
+        public ActionResult Delete([FromBody] FacilityViewModel facilityViewModel)
         {
-            if (guid == null)
+            if (facilityViewModel.Id == null)
             {
-                return NotFound();
+                return NotFound(new BookingError("No id provided!"));
             }
 
             try
             {
-                var isFacilityDeleted = facilityService.DeleteFacility(guid);
-                return isFacilityDeleted? Ok() : BadRequest();
+                var isFacilityDeleted = facilityService.DeleteFacility((Guid)facilityViewModel.Id);
+                return isFacilityDeleted? 
+                    Ok(new SuccessResponse("Facility successfully deleted!")) :
+                    BadRequest(new BookingError("Could not delete facility!"));
             }
             catch (Exception ex)
             {

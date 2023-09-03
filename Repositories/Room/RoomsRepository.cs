@@ -29,7 +29,7 @@ namespace HotelBookingAppReact.Repositories.Room
 
         public async Task<Models.Room.Room?> Get(int id)
         {
-            return await context.Rooms.FindAsync(id);
+            return await context.Rooms.Include(e=>e.Facilities).FirstOrDefaultAsync(x => x.RoomNumber == id);
         }
 
         public bool HasRecords()
@@ -39,7 +39,7 @@ namespace HotelBookingAppReact.Repositories.Room
 
         public async Task<IEnumerable<Models.Room.Room>?> List()
         {
-            return await context.Rooms?.ToListAsync();
+            return await context.Rooms?.Include(e => e.Facilities)?.ToListAsync();
         }
 
         public void Update(Models.Room.Room room)

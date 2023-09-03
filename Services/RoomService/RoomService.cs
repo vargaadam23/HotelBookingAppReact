@@ -2,6 +2,7 @@
 using HotelBookingAppReact.Models.Room;
 using HotelBookingAppReact.Repositories.Room;
 using HotelBookingAppReact.Services.FacilityService;
+using Microsoft.AspNetCore.Identity;
 
 namespace HotelBookingAppReact.Services.RoomService
 {
@@ -20,39 +21,24 @@ namespace HotelBookingAppReact.Services.RoomService
         }
         public bool CreateRoom(RoomViewModel roomViewModel)
         {
-            try
-            {
-                Room room = CreateRoomFromViewModel(roomViewModel);
+            Room room = CreateRoomFromViewModel(roomViewModel);
 
-                roomRepository.Create(room);
+            roomRepository.Create(room);
 
-                return true;
-            } catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return false;
-            }
+            return true;
         }
 
         public bool DeleteRoom(int roomId)
         {
-            try
-            {
-                var room = GetRoomById(roomId);
+            var room = GetRoomById(roomId);
 
-                if (room != null)
-                {
-                    roomRepository.Delete(room);
-                    return true;
-                }
-
-                return false;
-            }
-            catch (Exception ex)
+            if (room != null)
             {
-                _logger.LogError(ex.Message);
-                return false;
+                roomRepository.Delete(room);
+                return true;
             }
+
+            return false;
         }
 
         public Room? GetRoomById(int roomId)
@@ -72,31 +58,23 @@ namespace HotelBookingAppReact.Services.RoomService
 
         public bool UpdateRoom(RoomViewModel roomViewModel)
         {
-            try
+            if (roomViewModel == null || !HasRecords())
             {
-                if (roomViewModel == null || !HasRecords())
-                {
-                    return false;
-                }
-
-                var roomEntity = GetRoomById(roomViewModel.RoomNumber);
-
-                if (roomEntity == null)
-                {
-                    return false;
-                }
-
-                UpdateRoomFromViewModel(roomEntity, roomViewModel);
-
-                roomRepository.Update(roomEntity);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
                 return false;
             }
+
+            var roomEntity = GetRoomById(roomViewModel.RoomNumber);
+
+            if (roomEntity == null)
+            {
+                return false;
+            }
+
+            UpdateRoomFromViewModel(roomEntity, roomViewModel);
+
+            roomRepository.Update(roomEntity);
+
+            return true;
         }
 
         private Room CreateRoomFromViewModel(RoomViewModel roomViewModel)
@@ -112,11 +90,13 @@ namespace HotelBookingAppReact.Services.RoomService
             {
                 room.Facilities = facilities;
             }
+            System.Diagnostics.Debug.WriteLine(room.Facilities.First().Name);
+
 
             return room;
         }
 
-        private void UpdateRoomFromViewModel(Room roomEntity, RoomViewModel roomViewModel) 
+        private void UpdateRoomFromViewModel(Room roomEntity, RoomViewModel roomViewModel)
         {
             roomEntity.NumberOfBeds = roomViewModel.NumberOfBeds;
             roomEntity.PricePerNight = roomViewModel.PricePerNight;

@@ -19,36 +19,21 @@ namespace HotelBookingAppReact.Services.FacilityService
         {
             Facility facility = GetFacilityFromViewModel(facilityViewModel);
 
-            try
-            {
-                facilityRepository.Create(facility);
-                return true;
-            }catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return false;
-            }
+            facilityRepository.Create(facility);
+            return true;
         }
 
         public bool DeleteFacility(Guid id)
         {
             var facility = GetFacilityById(id);
 
-            if(facility == null)
+            if (facility == null)
             {
-                return false;
+                throw new Exception("Facility with id " + id.ToString() + " not found!");
             }
 
-            try
-            {
-                facilityRepository.Delete(facility);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return false;
-            }
+            facilityRepository.Delete(facility);
+            return true;
         }
 
         public IEnumerable<Facility> GetFacilities()

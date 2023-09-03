@@ -28,12 +28,12 @@ namespace HotelBookingAppReact.Data
 
             builder.Entity<ApplicationUser>()
                  .HasMany(e => e.Reservations)
-                 .WithOne(e => e.User);
+                 .WithOne(e => e.User)
+                 .HasForeignKey(e => e.UserId);
 
             builder.Entity<Room>()
                 .HasMany(e => e.Facilities)
-                .WithMany(e => e.Rooms);
-
+                .WithMany(e => e.rooms);
         }
 
         public DbSet<Room>? Rooms { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using HotelBookingAppReact.Models.Room;
 using Newtonsoft.Json;
 
@@ -10,7 +11,7 @@ namespace HotelBookingAppReact.Models.Facility
         public Guid Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        [JsonIgnore]
-        public IEnumerable<Room.Room> Rooms { get; set; } = new List<Room.Room>();
+        [System.Text.Json.Serialization.JsonIgnore]
+        public IEnumerable<Room.Room> rooms { get; set; } = new List<Room.Room>();
     }
 }
