@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { executeGetRoom } from '../data/ApiRequest.js';
 import { Room, APIPaths } from '../data/ApiConstants.js';
 import { FacilityBadge } from '../components/room-list-item/FacilityBadge.js';
-import { FormGroup, Label, Input, Button } from 'reactstrap';
+import { FormGroup, Label, Input, Button, Spinner } from 'reactstrap';
 import { ReserveSummary } from '../components/reserve-components/ReserveSummary.js';
+import { Loader } from '../components/loader/Loader.js';
 
 export class Reserve extends Component {
     static displayName = Reserve.name;
@@ -14,12 +15,15 @@ export class Reserve extends Component {
         this.state = {
             room: [],
             checkIn: '',
-            checkOut: ''
+            checkOut: '',
+            roomId: '',
+            isSubmitLoading: false
         };
     }
 
     componentDidMount() {
         executeGetRoom(this.getSearchParam(), this.setRoom.bind(this), this.onFail.bind(this));
+        this.setState({ roomId:this.getSearchParam() })
     }
 
     setRoom(room) {
@@ -28,7 +32,6 @@ export class Reserve extends Component {
     }
 
     onFail(e) {
-
         console.log(e, APIPaths);
     }
 
@@ -68,6 +71,42 @@ export class Reserve extends Component {
         return Number(pricePerNight) * diffDays;
     }
 
+    onSubmit(e) {
+        const {
+            checkIn,
+            checkOut,
+            roomId
+        } = this.state;
+
+        e.preventDefault();
+
+        this.setState({ isSubmitLoading: true });
+
+        const data = {
+            checkIn,
+            checkOut,
+            roomId
+        };
+
+        const response = fetch("/api/rooms/reserve", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        }).then((response) => {
+            return response.json()
+        }).then((response) =>
+            response
+        ).catch((e) =>
+            console.log(e)
+        ).finally(() =>
+            this.setState({ isSubmitLoading: false })    
+        );
+
+        console.log(response)
+    }
+
     render() {
         const {
             room: {
@@ -76,7 +115,8 @@ export class Reserve extends Component {
                 pricePerNight
             },
             checkIn,
-            checkOut
+            checkOut,
+            isSubmitLoading
         } = this.state;
 
         const totalPrice = this.getTotalPrice();
@@ -95,10 +135,9 @@ export class Reserve extends Component {
                         <div className="row">
                             {facilities.map(facility => <FacilityBadge facility={facility} isSimple={false} />)}
                         </div>
-
                     </div>
                 </div>
-                <form method="POST" className="row">
+                <form onSubmit={this.onSubmit } className="row">
                     <div className="col-5">
                         <FormGroup>
                             <Label for="checkIn">
@@ -138,6 +177,7 @@ export class Reserve extends Component {
                         <Button>Submit</Button>
                     </div>
                 </form>
+                <Loader isLoading={isSubmitLoading} />
             </div>
         );
     }

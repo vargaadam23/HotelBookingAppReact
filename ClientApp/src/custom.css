@@ -13,3 +13,14 @@ code {
   border-color: #1861ac;
 }
 
+.loader-wrapper {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    color: black;
+    opacity: 30%;
+    display: flex;
+    justify-content: center;
+    align-items:  center;
+}
+

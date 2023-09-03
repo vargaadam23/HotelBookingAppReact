@@ -4,6 +4,7 @@ namespace HotelBookingAppReact.Models.Reservation
 {
     public class ReservationViewModel
     {
+        public Guid id { get; set; }
         [JsonProperty("checkIn")]
         public DateTime checkIn { get; set; } = DateTime.Now;
         [JsonProperty("checkOut")]
@@ -11,5 +12,6 @@ namespace HotelBookingAppReact.Models.Reservation
         public string? userId { get; set; }
         [JsonProperty("roomId")]
         public int? roomId { get; set; }
+        public double? totalPrice { get; set; }
     }
 }

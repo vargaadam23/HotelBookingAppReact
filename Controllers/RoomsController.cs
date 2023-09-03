@@ -49,6 +49,7 @@ namespace HotelBookingAppReact.Controllers
             try
             {
                 bool isReserved = reservationService.Reserve(reservationViewModel);
+
                 return isReserved ? Ok() : BadRequest();
             }
             catch (Exception ex)
