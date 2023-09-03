@@ -41,28 +41,21 @@ namespace HotelBookingAppReact.Services.ReservationService
                 throw new Exception("User has to be logged in");
             }
 
-            try
+            var reservation = GetByReservationId(reservationId);
+
+            if (reservation == null)
             {
-                var reservation = GetByReservationId(reservationId);
-
-                if (reservation == null)
-                {
-                    return false;
-                }
-
-                if(reservation.UserId != user)
-                {
-                    return false;
-                }
-
-                reservationsRepository.Delete(reservation);
-
-                return true;
-            }catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return false;
+                throw new Exception("Reservation not found!");
             }
+
+            if (reservation.UserId != user)
+            {
+                throw new Exception("Reservation user id does not match current user!");
+            }
+
+            reservationsRepository.Delete(reservation);
+
+            return true;
         }
 
         public IEnumerable<Reservation> GetAllReservations()
@@ -72,7 +65,7 @@ namespace HotelBookingAppReact.Services.ReservationService
 
         public Reservation GetByReservationId(Guid? reservationId)
         {
-            if(reservationId == null)
+            if (reservationId == null)
             {
                 return null;
             }
@@ -87,7 +80,7 @@ namespace HotelBookingAppReact.Services.ReservationService
 
         public bool Reserve(ReservationViewModel reservationViewModel)
         {
-            bool isReservationValid = ValidateReservation(reservationViewModel.checkIn, reservationViewModel.checkOut, reservationViewModel.roomId);
+            bool isReservationValid = ValidateReservation((DateTime)reservationViewModel.checkIn, (DateTime)reservationViewModel.checkOut, reservationViewModel.roomId);
 
             if (isReservationValid)
             {
@@ -98,32 +91,32 @@ namespace HotelBookingAppReact.Services.ReservationService
                 return true;
             }
 
-            return false;
+            throw new Exception("Reservation failed!");
         }
 
         public bool UpdateReservation(ReservationViewModel reservationViewModel)
         {
-            bool maxDaysExceeded = (reservationViewModel.checkIn - DateTime.Now).Days < MAX_DAYS_TO_EDIT;
-            
+            bool maxDaysExceeded = (reservationViewModel.checkIn - DateTime.Now).Value.Days < MAX_DAYS_TO_EDIT;
+
             if (maxDaysExceeded)
             {
                 return false;
             }
 
-            if(reservationViewModel.id == null)
+            if (reservationViewModel.id == null)
             {
                 return false;
             }
 
-            var reservation = reservationsRepository.Get(reservationViewModel.id).Result;
+            var reservation = reservationsRepository.Get(reservationViewModel.id.Value).Result;
 
-            if(reservation == null)
+            if (reservation == null)
             {
                 return false;
             }
 
-            reservation.CheckIn = reservationViewModel.checkIn;
-            reservation.CheckOut = reservationViewModel.checkOut;
+            reservation.CheckIn = reservationViewModel.checkIn.Value;
+            reservation.CheckOut = reservationViewModel.checkOut.Value;
             reservation.TotalPrice = CalculatePrice(reservation);
 
             reservationsRepository.Update(reservation);
@@ -133,29 +126,24 @@ namespace HotelBookingAppReact.Services.ReservationService
 
         public bool ValidateReservation(DateTime checkIn, DateTime checkOut, int? RoomNumber)
         {
-            if((checkOut - checkIn).TotalDays < 1)
+            if ((checkOut - checkIn).TotalDays < 1)
             {
                 throw new ValidationException("Invalid dates, please make sure check in date is before check out date with at least 1 day difference!");
             }
 
-            var activeReservations = reservationsRepository.ListWhere((Reservation reservation) => {
+            var activeReservations = reservationsRepository.ListWhere((Reservation reservation) =>
+            {
                 return
                     reservation.Room.RoomNumber == RoomNumber &&
-                    (IsDateBetweenPair(checkIn, reservation) || IsDateBetweenPair(checkOut, reservation) ||
-                    (DateTime.Compare(checkIn, reservation.CheckIn) < 0 && DateTime.Compare(checkOut, reservation.CheckOut) > 0));
+                    (checkIn < reservation.CheckOut && reservation.CheckIn < checkOut);
             });
 
-            if(activeReservations.Any())
+            if (activeReservations.Any())
             {
-                throw new ValidationException("The room is reserved for the picked dates, please try another room or change the reservation dates!"+activeReservations.First().ToString());
+                throw new ValidationException("The room is reserved for the picked dates, please try another room or change the reservation dates!" + activeReservations.First().ToString());
             }
 
             return true;
-        }
-
-        private bool IsDateBetweenPair(DateTime dateToCompare,Reservation reservation)
-        {
-            return DateTime.Compare(dateToCompare, reservation.CheckIn) >= 0 && DateTime.Compare(dateToCompare, reservation.CheckOut) < 0;
         }
 
         private async Task<Reservation> CreateReservationFromViewModel(ReservationViewModel reservationViewModel)
@@ -178,10 +166,11 @@ namespace HotelBookingAppReact.Services.ReservationService
                 Room = room,
                 UserId = user,
                 User = await userManager.FindByIdAsync(user),
-                CheckIn = reservationViewModel.checkIn,
-                CheckOut = reservationViewModel.checkOut,
-                TotalPrice = room.PricePerNight
+                CheckIn = reservationViewModel.checkIn.Value,
+                CheckOut = reservationViewModel.checkOut.Value,
             };
+
+            reservation.TotalPrice = CalculatePrice(reservation);
 
             return reservation;
 

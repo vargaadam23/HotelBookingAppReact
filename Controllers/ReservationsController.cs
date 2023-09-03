@@ -20,31 +20,44 @@ namespace HotelBookingAppReact.Controllers
 
         [HttpGet]
         [Authorize]
-        public IEnumerable<Reservation> Get()
-
+        public IActionResult Get()
         {
-            return reservationService.HasRecords() ? reservationService.GetReservationsForUser() : new List<Reservation>();
+            try
+            {
+                return Ok(reservationService.HasRecords() ? reservationService.GetReservationsForUser() : new List<Reservation>());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BookingError(ex));
+            }
         }
 
         [HttpGet]
         [Authorize]
-        public IEnumerable<Reservation> GetAll()
+        public IActionResult GetAll()
         {
-            return reservationService.HasRecords() ? reservationService.GetAllReservations() : new List<Reservation>();
+            try
+            {
+                return Ok(reservationService.HasRecords() ? reservationService.GetAllReservations() : new List<Reservation>());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BookingError(ex));
+            }
         }
 
         [HttpDelete]
-        public ActionResult Cancel([FromBody] Guid guid)
+        public IActionResult Cancel([FromBody]ReservationViewModel reservationViewModel)
         {
-            if (guid == null)
+            if (reservationViewModel.id == null)
             {
-                return NotFound();
+                return NotFound(new BookingError("Reservation id not found"));
             }
 
             try
             {
-                var isReservationDeleted = reservationService.CacelReservation(guid);
-                return isReservationDeleted ? Ok() : BadRequest();
+                var isReservationDeleted = reservationService.CacelReservation((Guid)reservationViewModel.id);
+                return isReservationDeleted ? Ok(new SuccessResponse("Reservation canceled!")) : BadRequest(new BookingError("Reservation could not be canceled"));
             }
             catch (Exception ex)
             {

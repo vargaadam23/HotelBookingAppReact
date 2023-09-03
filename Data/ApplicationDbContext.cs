@@ -34,6 +34,10 @@ namespace HotelBookingAppReact.Data
             builder.Entity<Room>()
                 .HasMany(e => e.Facilities)
                 .WithMany(e => e.rooms);
+
+            builder.Entity<Reservation>()
+                .HasOne(e => e.Room)
+                .WithMany(e => e.Reservations);
         }
 
         public DbSet<Room>? Rooms { get; set; }

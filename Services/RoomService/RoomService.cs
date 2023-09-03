@@ -38,7 +38,7 @@ namespace HotelBookingAppReact.Services.RoomService
                 return true;
             }
 
-            return false;
+            throw new Exception("Room not found!");
         }
 
         public Room? GetRoomById(int roomId)
@@ -60,14 +60,14 @@ namespace HotelBookingAppReact.Services.RoomService
         {
             if (roomViewModel == null || !HasRecords())
             {
-                return false;
+                throw new Exception("Room could not be updated!");
             }
 
             var roomEntity = GetRoomById(roomViewModel.RoomNumber);
 
             if (roomEntity == null)
             {
-                return false;
+                throw new Exception("Room not found!");
             }
 
             UpdateRoomFromViewModel(roomEntity, roomViewModel);
