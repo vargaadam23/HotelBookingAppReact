@@ -22,7 +22,7 @@ namespace HotelBookingAppReact.Repositories.Reservation
 
         public async Task<Models.Reservation.Reservation?> Get(Guid guid)
         {
-            return await _context.Reservations.FindAsync(guid);
+            return await _context.Reservations.Include(e=>e.Room).Include(e=>e.User).FirstOrDefaultAsync(e => e.Id == guid);
         }
 
         public bool HasRecords()
@@ -32,12 +32,12 @@ namespace HotelBookingAppReact.Repositories.Reservation
 
         public async Task<IEnumerable<Models.Reservation.Reservation>?> List()
         {
-            return await _context.Reservations?.ToListAsync();
+            return await _context.Reservations?.Include(e => e.Room).Include(e => e.User).ToListAsync();
         }
 
         public IEnumerable<Models.Reservation.Reservation> ListWhere(Func<Models.Reservation.Reservation, bool> wherePredicate)
         {
-            return _context.Reservations.Where(wherePredicate).ToList();
+            return _context.Reservations.Include(e => e.Room).Include(e => e.User).Where(wherePredicate).ToList();
         }
 
         public void Update(Models.Reservation.Reservation reservation)
