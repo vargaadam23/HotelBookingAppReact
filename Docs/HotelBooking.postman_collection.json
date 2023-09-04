@@ -1,0 +1,346 @@
+{
+	"info": {
+		"_postman_id": "6bb6293a-da48-4b90-85c9-63fb9658d364",
+		"name": "HotelBooking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29145561"
+	},
+	"item": [
+		{
+			"name": "List facilities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7042/api/facilities/list",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"facilities",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateFacility",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Room service\",\r\n    \"description\": \"Room service is available for this room!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/facilities/create",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"facilities",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Facility",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"8168054e-9efb-4a5a-993e-7d4002081bf0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/facilities/delete",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"facilities",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List rooms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7042/api/rooms/list",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"rooms",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create room",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"numberOfBeds\":3,\r\n    \"pricePerNight\":664,\r\n    \"facilities\":[\"a1d18123-e6db-4601-8385-f4c0e07b5157\",\"2e948b6e-dc88-4b28-82a6-c823278f09da\",\"2e948b6e-dc88-4b28-82a6-c823278f09da\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/rooms/create",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"rooms",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update room",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roomNumber\":1,\r\n    \"numberOfBeds\":3,\r\n    \"pricePerNight\":664,\r\n    \"facilities\":[\"a1d18123-e6db-4601-8385-f4c0e07b5157\",\"2e948b6e-dc88-4b28-82a6-c823278f09da\",\"2e948b6e-dc88-4b28-82a6-c823278f09da\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/rooms/update",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"rooms",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete room",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roomNumber\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/rooms/delete",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"rooms",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get room",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roomNumber\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/rooms/get",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"rooms",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reserve room",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"checkIn\":\"2019-06-26T00:00:00\",\r\n    \"checkOut\":\"2019-06-29T00:00:00\",\r\n    \"roomId\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/rooms/reserve",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"rooms",
+						"reserve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reservation get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7042/api/reservations/get",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"reservations",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reservation cancel",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1daf0e2c-9ff4-47d1-a8ed-0ebeb51298ef\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7042/api/reservations/cancel",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7042",
+					"path": [
+						"api",
+						"reservations",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkRldmVsb3BtZW50IiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDQ0NCIsIm5iZiI6MTY5Mzc3NjU4MSwiaWF0IjoxNjkzNzc2NTgxLCJleHAiOjE2OTM3ODAxODEsImF1ZCI6IkhvdGVsQm9va2luZ0FwcFJlYWN0QVBJIiwic2NvcGUiOlsiSG90ZWxCb29raW5nQXBwUmVhY3RBUEkiLCJvcGVuaWQiLCJwcm9maWxlIl0sImFtciI6WyJwd2QiXSwiY2xpZW50X2lkIjoiSG90ZWxCb29raW5nQXBwUmVhY3QiLCJzdWIiOiI1MDc5YWFlMy1jYTFkLTQ4ZjYtODdiMi03NmZlNDMxNDkzYjIiLCJhdXRoX3RpbWUiOjE2OTM3NzY1ODAsImlkcCI6ImxvY2FsIiwic2lkIjoiMzM2OUQ1Q0Q5QkM4NzBCNTc3MjlGNEQwOUYyQUQ3ODAiLCJqdGkiOiIzMDM4NjZDODU1NjM4QTI2Njc2RjY1NjlCRTJFRjNCOCJ9.jneY6NMfvxBxflGKpSVrdqiXf_cxtYZIX7rdA5WEVxpZOqll1_vq3RPBMSHl4MDaueZ0Kn_NYUymEL5Dy1RbJv0sKrMGJrmJ3S_3WeD7F1lZcgQOqi6n5R8T2Yd6kG0tCbSJN2NhIcNX8ULXyoVz1txxeIZ49kEyn6qWmN-3A4xKDbu5ez6IqdYBYa0wbMOAeO7wPhdm_Qzr18IHoiggxT9Oi9HS01CIcxlmu4JWUPikQvkjKAlb5RCihTX3xksQtFPkNN97fEEijBzfqMD7dcH0ykPARHo5H9moFmlYZYZlpSIDI50NYwHPWKoPu6D65xotnCdTw-wdNS_YzoJFWQ",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
